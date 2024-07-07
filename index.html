@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>Enhanced To-Do List</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,12 +28,21 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        #todoInput {
-            width: 70%;
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        #todoInput, #todoTime {
             padding: 10px;
             border: none;
             border-radius: 5px;
             margin-right: 5px;
+        }
+        #todoInput {
+            flex-grow: 1;
+        }
+        #todoTime {
+            width: 120px;
         }
         button {
             padding: 10px 15px;
@@ -65,10 +74,21 @@
         .todo-item:hover {
             background-color: #f0f0f0;
         }
-        .todo-item span {
-            cursor: pointer;
+        .todo-content {
+            display: flex;
+            align-items: center;
         }
-        .completed {
+        .todo-checkbox {
+            margin-right: 10px;
+        }
+        .todo-text {
+            margin-right: 10px;
+        }
+        .todo-time {
+            font-size: 0.8em;
+            color: #666;
+        }
+        .completed .todo-text {
             text-decoration: line-through;
             opacity: 0.6;
         }
@@ -84,35 +104,44 @@
 </head>
 <body>
     <div class="container">
-        <h1>To-Do List</h1>
-        <input type="text" id="todoInput" placeholder="Enter a new task">
-        <button onclick="addTodo()">Add</button>
+        <h1>Enhanced To-Do List</h1>
+        <div class="input-group">
+            <input type="text" id="todoInput" placeholder="Enter a new task">
+            <input type="time" id="todoTime">
+            <button onclick="addTodo()">Add</button>
+        </div>
         <ul id="todoList"></ul>
     </div>
 
     <script>
         function addTodo() {
             const input = document.getElementById('todoInput');
+            const time = document.getElementById('todoTime');
             const list = document.getElementById('todoList');
             
             if (input.value.trim() !== '') {
                 const li = document.createElement('li');
                 li.className = 'todo-item';
                 li.innerHTML = `
-                    <span onclick="toggleComplete(this)">${input.value}</span>
+                    <div class="todo-content">
+                        <input type="checkbox" class="todo-checkbox" onchange="toggleComplete(this)">
+                        <span class="todo-text">${input.value}</span>
+                        <span class="todo-time">${time.value}</span>
+                    </div>
                     <button class="delete-btn" onclick="removeTodo(this)">Delete</button>
                 `;
                 list.appendChild(li);
                 input.value = '';
+                time.value = '';
             }
         }
 
-        function toggleComplete(element) {
-            element.classList.toggle('completed');
+        function toggleComplete(checkbox) {
+            checkbox.closest('.todo-item').classList.toggle('completed');
         }
 
         function removeTodo(button) {
-            button.parentElement.remove();
+            button.closest('.todo-item').remove();
         }
     </script>
 </body>
